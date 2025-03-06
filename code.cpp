@@ -11,9 +11,31 @@ const int numKeys = 21;
 // D13, D12, D14, D27, D26, D25, D33, D32, D15, D2, RX2, TX2, D5, D18, D19, D21, RX0, TX0, D22, D23, D4
 int keyPins[numKeys] = {13, 12, 14, 27, 26, 25, 33, 32, 15, 2, 16, 17, 5, 18, 19, 21, 3, 1, 22, 23, 4};
 
-// Map each key to a character: 'a' through 'u'
-char keyChars[numKeys] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j',
-                          'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u'};
+// New key mapping based on your requested configuration:
+// Modified key mapping to avoid the Q/shift issue
+uint8_t keyMapping[numKeys] = {
+  'w',            // 1: D13
+  KEY_TAB,        // 2: D12
+  's',            // 3: D14
+  'a',            // 4: D27
+  'y',            // 5: D26
+  KEY_LEFT_SHIFT, // 6: D25
+  'z',            // 7: D33
+  ' ',            // 8: D32
+  'q',            // 9: D15 (changed from 'Q' to 'q')
+  'g',            // 10: D2
+  'r',            // 11: RX2
+  'b',            // 12: TX2
+  'f',            // 13: D5
+  'd',            // 14: D18
+  'e',            // 15: D19
+  'v',            // 16: D21
+  'x',            // 17: RX0
+  '4',            // 18: TX0
+  'c',            // 19: D22
+  KEY_LEFT_CTRL,  // 20: D23
+  't'             // 21: D4
+};
 
 // Define activation logic for each key:
 // All keys are active-low (INPUT_PULLUP) except D2 (index 9) which is active-high.
@@ -113,9 +135,9 @@ void loop() {
         newKeyPressed = true;
         if (connected) {
           Serial.print("Key ");
-          Serial.print(keyChars[i]);
+          Serial.print(keyMapping[i]);
           Serial.println(" pressed");
-          bleKeyboard.write(keyChars[i]);
+          bleKeyboard.write(keyMapping[i]);
         }
       } else {
         // Key is held down.
@@ -126,9 +148,9 @@ void loop() {
             firstAutoRepeat[i] = false;  // First auto-repeat occurred.
             if (connected) {
               Serial.print("Key ");
-              Serial.print(keyChars[i]);
+              Serial.print(keyMapping[i]);
               Serial.println(" auto-repeat (first)");
-              bleKeyboard.write(keyChars[i]);
+              bleKeyboard.write(keyMapping[i]);
             }
           }
         } else {
@@ -137,9 +159,9 @@ void loop() {
             lastSent[i] = now;
             if (connected) {
               Serial.print("Key ");
-              Serial.print(keyChars[i]);
+              Serial.print(keyMapping[i]);
               Serial.println(" auto-repeat");
-              bleKeyboard.write(keyChars[i]);
+              bleKeyboard.write(keyMapping[i]);
             }
           }
         }
